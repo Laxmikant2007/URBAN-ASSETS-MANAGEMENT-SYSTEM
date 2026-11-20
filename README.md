@@ -209,40 +209,6 @@ Admin Reviews Resolution
 
 ---
 
-## 📂 Project Structure
-
-```text
-UrbanCare/
-│
-├── backend/
-│   ├── main.py
-│   ├── database.py
-│   ├── vector_service.py
-│   ├── sync_complaints_to_vectors.py
-│   ├── test_vector_db.py
-│   ├── test_vector_rud.py
-│   ├── setup_demo_passwords.py
-│   ├── main_before_auth.py
-│   ├── chroma_data/
-│   ├── uploads/
-│   ├── .env
-│   ├── .venv/
-│   └── .venv-vector/
-│
-├── frontend/
-│   ├── index.html
-│   ├── style.css
-│   └── script.js
-│
-├── chroma_data/
-├── .gitignore
-└── README.md
-```
-
-> Virtual environments, `.env` files, uploaded files, and generated vector database files are local resources and should not be committed to GitHub.
-
----
-
 # 🚀 How to Run the Project Locally
 
 ## Prerequisites
