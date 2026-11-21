@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Assets & Complaint Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">U</div>
+                <div>
+                    <h2>UrbanCare</h2>
+                    <p>City Management</p>
+                </div>
+            </div>
+
+            <p class="menu-label">MAIN MENU</p>
+
+            <nav>
+                <a href="#dashboard" class="nav-link active">▦ Dashboard</a>
+                <a href="#assets" class="nav-link">⌖ Urban Assets</a>
+                <a href="#submit" class="nav-link">＋ Submit Complaint</a>
+                <a href="#complaints" class="nav-link">☷ Complaints</a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <span class="status-dot"></span>
+                Backend connection
+                <strong id="connection-status">Checking...</strong>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow">CITY OPERATIONS</p>
+                    <h1 id="page-title">Dashboard Overview</h1>
+                </div>
+
+                <div class="profile">
+                    <div class="avatar" id="profile-avatar">U</div>
+                    <div>
+                        <strong id="profile-name">Not logged in</strong>
+                        <p id="profile-role">Please sign in</p>
+                    </div>
+                    <button
+                        id="logout-button"
+                        class="secondary-button"
+                        type="button"
+                        style="display: none;"
+                        onclick="logout()">
+                        Logout
+                    </button>
+                </div>
+            </header>
+
+            <!-- LOGIN SECTION -->
+            <section id="login-section" class="page-section">
+                <div class="content-card form-card">
+                    <div class="section-heading">
+                        <div>
+                            <h2>Sign in to UrbanCare</h2>
+                            <p>Log in with your registered account.</p>
+                        </div>
+                    </div>
+
+                    <form id="login-form">
+                        <label for="login-email">Email</label>
+                        <input
+                            id="login-email"
+                            type="email"
+                            placeholder="Enter your registered email"
+                            autocomplete="username"
+                            required>
+
+                        <label for="login-password">Password</label>
+                        <input
+                            id="login-password"
+                            type="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required>
+
+                        <button type="submit" class="primary-button">
+                            Login
+                        </button>
+
+                        <p id="login-message" role="status"></p>
+                    </form>
+                </div>
+            </section>
+
+            <!-- DASHBOARD -->
+            <section id="dashboard" class="page-section">
+                <div class="welcome">
+                    <div>
+                        <p class="eyebrow">URBAN MANAGEMENT SYSTEM</p>
+                        <h2>Welcome to UrbanCare</h2>
+                        <p>Monitor city assets and manage citizen complaints in one place.</p>
+                    </div>
+                    <div class="welcome-icon">🏙️</div>
+                </div>
+
+                <div class="stats-grid">
+                    <article class="stat-card">
+                        <div class="stat-icon blue">⌖</div>
+                        <p>Total Assets</p>
+                        <h2 id="total-assets">—</h2>
+                        <span>Registered city assets</span>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-icon orange">☷</div>
+                        <p>Total Complaints</p>
+                        <h2 id="total-complaints">—</h2>
+                        <span>Complaints visible to your account</span>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-icon purple">◷</div>
+                        <p>Pending Complaints</p>
+                        <h2 id="pending-complaints">—</h2>
+                        <span>Awaiting resolution</span>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-icon green">✓</div>
+                        <p>Resolved Complaints</p>
+                        <h2 id="resolved-complaints">—</h2>
+                        <span>Marked as resolved</span>
+                    </article>
+                </div>
+
+                <div class="content-card">
+                    <div class="section-heading">
+                        <div>
+                            <h2>Recent Complaints</h2>
+                            <p>Latest complaints available to your account</p>
+                        </div>
+                        <button
+                            class="secondary-button"
+                            type="button"
+                            onclick="loadComplaints()">
+                            Refresh
+                        </button>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Complaint</th>
+                                    <th>Category</th>
+                                    <th>Urgency</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-complaints">
+                                <tr>
+                                    <td colspan="5">Please log in to view complaints.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- URBAN ASSETS -->
+            <section id="assets" class="page-section">
+                <div class="section-heading">
+                    <div>
+                        <h2>Urban Assets</h2>
+                        <p>View registered infrastructure and its operational status.</p>
+                    </div>
+                    <button
+                        class="secondary-button"
+                        type="button"
+                        onclick="loadAssets()">
+                        Refresh Assets
+                    </button>
+                </div>
+            
+<!-- ADMIN: ADD NEW ASSET FORM -->
+<div class="content-card form-card admin-controls"
+     id="add-asset-card"
+     style="display: none;">
+
+    <div class="section-heading">
+        <div>
+            <h2>Add New Asset</h2>
+            <p>Register a new urban infrastructure asset.</p>
+        </div>
+    </div>
+
+    <form id="add-asset-form">
+
+        <div class="form-grid">
+
+            <div>
+                <label for="new-asset-type">Asset Type</label>
+                <input
+                    type="text"
+                    id="new-asset-type"
+                    placeholder="e.g. Streetlight"
+                    required>
+            </div>
+
+            <div>
+                <label for="new-asset-name">Asset Name</label>
+                <input
+                    type="text"
+                    id="new-asset-name"
+                    placeholder="e.g. MG Road Light 02"
+                    required>
+            </div>
+
+            <div>
+                <label for="new-asset-lat">Latitude</label>
+                <input
+                    type="number"
+                    step="any"
+                    min="-90"
+                    max="90"
+                    id="new-asset-lat"
+                    placeholder="12.9716"
+                    required>
+            </div>
+
+            <div>
+                <label for="new-asset-long">Longitude</label>
+                <input
+                    type="number"
+                    step="any"
+                    min="-180"
+                    max="180"
+                    id="new-asset-long"
+                    placeholder="77.5946"
+                    required>
+            </div>
+
+            <div>
+                <label for="new-asset-installation">Installation Date</label>
+                <input
+                    type="date"
+                    id="new-asset-installation"
+                    required>
+            </div>
+
+            <div>
+                <label for="new-asset-status">Operational Status</label>
+                <select id="new-asset-status" required>
+                    <option value="Operational">Operational</option>
+                    <option value="Under Maintenance">Under Maintenance</option>
+                    <option value="Non-Operational">Non-Operational</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="new-asset-health">Health Score (0–100)</label>
+                <input
+                    type="number"
+                    id="new-asset-health"
+                    min="0"
+                    max="100"
+                    value="100"
+                    required>
+            </div>
+
+            <div>
+                <label for="new-asset-maintenance">Last Maintenance Date</label>
+                <input
+                    type="date"
+                    id="new-asset-maintenance">
+            </div>
+
+        </div>
+
+        <label for="new-asset-description">Description</label>
+        <textarea
+            id="new-asset-description"
+            maxlength="2000"
+            placeholder="Enter asset description..."
+            required></textarea>
+
+        <button type="submit" class="primary-button">
+            Add Asset
+        </button>
+
+        <p id="asset-form-message" role="status"></p>
+
+    </form>
+</div>
+<!-- END ADMIN ADD ASSET FORM -->
+
+                <div id="assets-list" class="asset-grid">
+                    <p>Loading assets...</p>
+                </div>
+            </section>
+
+            <!-- SUBMIT COMPLAINT -->
+            <section id="submit" class="page-section">
+                <div class="content-card form-card">
+                    <div class="section-heading">
+                        <div>
+                            <h2>Submit a Complaint</h2>
+                            <p>Report an issue with city infrastructure.</p>
+                        </div>
+                    </div>
+
+                    <form id="complaint-form">
+                        <label for="description">Complaint Description</label>
+                        <textarea
+                            id="description"
+                            minlength="5"
+                            maxlength="5000"
+                            placeholder="Describe the issue clearly..."
+                            required></textarea>
+
+                        <div class="form-grid">
+                            <div>
+                                <label for="category">Category</label>
+                                <select id="category" required>
+                                    <option value="">Select category</option>
+                                    <option>Road</option>
+                                    <option>Streetlight</option>
+                                    <option>Garbage</option>
+                                    <option>Water</option>
+                                    <option>Drainage</option>
+                                    <option>Electricity</option>
+                                    <option>Traffic</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="urgency">Urgency (1–10)</label>
+                                <input
+                                    id="urgency"
+                                    type="number"
+                                    min="1"
+                                    max="10"
+                                    value="5"
+                                    required>
+                            </div>
+
+                            <div>
+                                <label for="latitude">Latitude</label>
+                                <input
+                                    id="latitude"
+                                    type="number"
+                                    step="any"
+                                    min="-90"
+                                    max="90"
+                                    placeholder="e.g. 12.9716"
+                                    required>
+                            </div>
+
+                            <div>
+                                <label for="longitude">Longitude</label>
+                                <input
+                                    id="longitude"
+                                    type="number"
+                                    step="any"
+                                    min="-180"
+                                    max="180"
+                                    placeholder="e.g. 77.5946"
+                                    required>
+                            </div>
+
+                            <div>
+                                <label for="asset-id">Related Asset</label>
+                                <select id="asset-id" required>
+                                    <option value="">Loading assets...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    <label for="photo-url">Photo URL (optional)</label>
+                        <input
+                            id="photo-url"
+                            type="url"
+                            maxlength="500"
+                            placeholder="https://example.com/photo.jpg"
+                        >
+
+                    <label for="attachment-file">
+                        Or upload a photo, screenshot, or PDF (optional)
+                    </label>
+                        <input
+                        id="attachment-file"
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
+                    >
+
+                    <small>
+                    Choose either a URL or a file, not both.
+                    Maximum file size: 5 MB.
+                    </small>
+
+                    <!-- Similar Complaints Section -->
+                    <div id="similar-complaints-section" hidden>
+                        <h3>Similar Existing Complaints</h3>
+                        <p>
+                            We found complaints that may describe the same issue.
+                            Please review them before submitting.
+                        </p>
+
+                        <div id="similar-complaints-results"></div>
+                    </div>
+
+
+                        <button type="submit" class="primary-button">
+                            Submit Complaint
+                        </button>
+
+                        <p id="form-message" role="status"></p>
+                    </form>
+                </div>
+            </section>
+
+            <!-- COMPLAINT MANAGEMENT -->
+            <section id="complaints" class="page-section">
+                <div class="content-card">
+                    <div class="section-heading">
+                        <div>
+                            <h2>Complaint Management</h2>
+                            <p>Review complaint status and staff assignments.</p>
+                        </div>
+                        <button
+                            class="secondary-button"
+                            type="button"
+                            onclick="loadComplaints()">
+                            Refresh
+                        </button>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Description</th>
+                                    <th>Photo</th>
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                    <th>Staff</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="all-complaints">
+                                <tr>
+                                    <td colspan="7">Please log in to view complaints.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <footer>
+                UrbanCare · Intelligent Urban Assets and Complaint Management System
+            </footer>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
